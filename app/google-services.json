@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "781408311284",
+    "project_id": "appesame-39372",
+    "storage_bucket": "appesame-39372.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781408311284:android:4a407548c8a009af338ba1",
+        "android_client_info": {
+          "package_name": "com.example.appesame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "781408311284-vslkps6p18gq6545f0j9evr4oetuj3sr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6IbjKC20dgBo68sr-Hlpf4zVq52v1598"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781408311284-vslkps6p18gq6545f0j9evr4oetuj3sr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

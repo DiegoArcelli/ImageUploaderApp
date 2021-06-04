@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">AppEsame</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_title">Log In</string>
+    <string name="insert_email">Insert email:</string>
+    <string name="insert_password">Insert password:</string>
+    <string name="login_button">Log In</string>
+    <string name="registration_button">Register</string>
+    <string name="registration_title">Register</string>
+    <string name="insert_username">Insert username:</string>
+    <string name="go_to_login">Already have an account? Go to login</string>
+    <string name="go_to_registration">Don\'t have an account? Go to registration</string>
+    <string name="take_photo">Take photo:</string>
+</resources>
