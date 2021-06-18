@@ -1,15 +1,22 @@
 package com.example.appesame
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import org.w3c.dom.Text
+import java.net.URI
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,8 +33,9 @@ class ProfileFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var username : String
     private lateinit var user_title : TextView
+    private lateinit var db : FirebaseFirestore
+    private lateinit var user : FirebaseUser
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,17 +53,45 @@ class ProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val layout =  inflater.inflate(R.layout.fragment_profile, container, false)
+        user_title = layout.findViewById(R.id.profile_name)
+
 
         // getting user information
-        val user : FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        db = FirebaseFirestore.getInstance()
+        user = FirebaseAuth.getInstance().currentUser!!
+        Log.d("USERNAME", user!!.uid)
         if (user != null) {
             user.let {
-                username = user!!.displayName.toString()
+                val docRef : DocumentReference = db.collection("users").document(user.uid)
+                docRef.addSnapshotListener {snapshot, e ->
+                    val username = snapshot!!.get("user_name").toString()
+                    user_title.text = username
+                }
+
             }
         }
-        user_title = layout.findViewById(R.id.profile_name)
-        user_title.text = username
 
+        // populating and displaying the recycle view
+        val imagesNames : ArrayList<String> = ArrayList()
+        val imagesDescr : ArrayList<String> = ArrayList()
+        val imagesCol = db.collection("images")
+        val query = imagesCol
+            .whereEqualTo("user", user!!.uid)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    imagesNames.add(document["file_name"] as String)
+                    imagesDescr.add(document["description"] as String)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("QUERY ERROR", "Error getting documents: ", exception)
+            }
+
+        val recView : RecyclerView = layout.findViewById(R.id.recycle_images_viewer)
+        val imgViewAdapter : ImageViewerAdpater = ImageViewerAdpater(imagesNames, imagesDescr, this.context)
+        recView.adapter = imgViewAdapter
+        //recView.layoutManager = LinearLayoutManager(this.context)
         return layout
     }
 

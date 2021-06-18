@@ -62,12 +62,14 @@ class LoginFragment : Fragment() {
         fAuth = FirebaseAuth.getInstance()
 
         toRegistration.setOnClickListener {
+            Log.d("GO TO REG", "Go to registration page")
             findNavController().navigate(R.id.action_login_to_registration)
         }
 
         loginButton.setOnClickListener {
             val email_text: String = email.text.toString()
             val password_text: String = password.text.toString()
+
 
             // checks if the value of the fields are empty or not
             if (TextUtils.isEmpty(email_text)) {
@@ -104,7 +106,6 @@ class LoginFragment : Fragment() {
                 }
 
             }
-
 
         }
 

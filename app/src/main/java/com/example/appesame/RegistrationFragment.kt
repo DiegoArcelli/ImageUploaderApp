@@ -18,6 +18,8 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,6 +42,7 @@ class RegistrationFragment : Fragment() {
     private lateinit var fAuth: FirebaseAuth
     private lateinit var registerButton : Button
     private lateinit var toLogin : TextView
+    private lateinit var db : FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +66,7 @@ class RegistrationFragment : Fragment() {
         toLogin = layout.findViewById<TextView>(R.id.go_to_login)
 
         fAuth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         if (fAuth.currentUser != null) {
             findNavController().navigate(R.id.action_registration_to_login)
@@ -103,11 +107,11 @@ class RegistrationFragment : Fragment() {
 
                     val user : FirebaseUser = fAuth.currentUser!!
 
-                    val request = UserProfileChangeRequest.Builder()
+                    /*val request = UserProfileChangeRequest.Builder()
                         .setDisplayName(username_text)
                         .build()
 
-                    user.updateProfile(request)
+                    user.updateProfile(request)*/
 
                     user!!.sendEmailVerification().addOnSuccessListener {
                         Toast.makeText(
@@ -119,8 +123,17 @@ class RegistrationFragment : Fragment() {
                         Log.d("ERROR", "Errore")
                     }
 
-                    Toast.makeText(activity, "User created", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_registration_to_login)
+                    val docRef : DocumentReference = db.collection("users").document(user.uid)
+                    val userMap : HashMap<String, Any?> = HashMap<String, Any?>()
+                    userMap.put("user_name", username_text)
+                    userMap.put("profile_picture", null)
+                    docRef.set(userMap).addOnSuccessListener {
+                        Toast.makeText(activity, "User created", Toast.LENGTH_SHORT).show()
+                        findNavController().navigate(R.id.action_registration_to_login)
+                    }.addOnFailureListener {
+                        Toast.makeText(activity, "Error", Toast.LENGTH_SHORT).show()
+                    }
+
                 } else {
                     Toast.makeText(activity, "Error!" + task.exception, Toast.LENGTH_SHORT).show()
                 }

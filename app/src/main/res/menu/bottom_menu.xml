@@ -5,4 +5,5 @@
     <item android:title="Camera" android:icon="@drawable/ic_camera" android:id="@+id/photoFragment"/>
     <item android:title="Search" android:icon="@drawable/ic_search" android:id="@+id/searchFragment"/>
     <item android:title="Map" android:icon="@drawable/ic_map" android:id="@+id/mapFragment"/>
+    <item android:title="Settings" android:icon="@drawable/ic_settings" android:id="@id/settingsFragment"/>
 </menu>

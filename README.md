@@ -13,5 +13,5 @@ An Instagram-like application made with Android Studio that allows user to creat
 - [ ] Showing users profile
 - [ ] Users seach by name
 - [ ] Taking photos from camera
+- [x] Selectin photos from gallery
 - [ ] Add like to photos
-- [ ] Visualize phots on make
