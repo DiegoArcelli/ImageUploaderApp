@@ -32,7 +32,6 @@ class ImageUploaderActivity : AppCompatActivity() {
     private lateinit var user : FirebaseUser
     
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_uploader)

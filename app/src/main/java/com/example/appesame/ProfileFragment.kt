@@ -36,6 +36,8 @@ class ProfileFragment : Fragment() {
     private lateinit var user_title : TextView
     private lateinit var db : FirebaseFirestore
     private lateinit var user : FirebaseUser
+    private lateinit var imgViewAdapter : ImageViewerAdpater
+    private lateinit var recView : RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,10 +74,10 @@ class ProfileFragment : Fragment() {
         }
 
         // populating and displaying the recycle view
+        recView = layout.findViewById(R.id.recycle_images_viewer)
         val imagesNames : ArrayList<String> = ArrayList()
         val imagesDescr : ArrayList<String> = ArrayList()
-        val imagesCol = db.collection("images")
-        val query = imagesCol
+        db.collection("images")
             .whereEqualTo("user", user!!.uid)
             .get()
             .addOnSuccessListener { documents ->
@@ -83,16 +85,19 @@ class ProfileFragment : Fragment() {
                     imagesNames.add(document["file_name"] as String)
                     imagesDescr.add(document["description"] as String)
                 }
+                initializeImageViewer(imagesNames, imagesDescr)
             }
             .addOnFailureListener { exception ->
                 Log.w("QUERY ERROR", "Error getting documents: ", exception)
             }
 
-        val recView : RecyclerView = layout.findViewById(R.id.recycle_images_viewer)
-        val imgViewAdapter : ImageViewerAdpater = ImageViewerAdpater(imagesNames, imagesDescr, this.context)
-        recView.adapter = imgViewAdapter
-        //recView.layoutManager = LinearLayoutManager(this.context)
         return layout
+    }
+
+    fun initializeImageViewer(imagesNames : ArrayList<String>, imagesDescr : ArrayList<String>) {
+        imgViewAdapter = ImageViewerAdpater(imagesNames, imagesDescr, this.context)
+        recView.adapter = imgViewAdapter
+        recView.layoutManager = LinearLayoutManager(this.context)
     }
 
     companion object {
