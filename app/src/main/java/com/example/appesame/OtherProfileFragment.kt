@@ -1,17 +1,15 @@
 package com.example.appesame
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -23,10 +21,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
+ * Use the [OtherProfileFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ProfileFragment : Fragment() {
+class OtherProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -34,9 +32,9 @@ class ProfileFragment : Fragment() {
     private lateinit var user_title : TextView
     private lateinit var db : FirebaseFirestore
     private lateinit var user : FirebaseUser
-    private lateinit var proPic : ImageView
     private lateinit var imgViewAdapter : ImageViewerAdpater
     private lateinit var recView : RecyclerView
+    private val args : OtherProfileFragmentArgs by navArgs()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,42 +51,30 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val layout =  inflater.inflate(R.layout.fragment_profile, container, false)
+        val layout =  inflater.inflate(R.layout.fragment_other_profile, container, false)
+        val uid = args.uid
+
         user_title = layout.findViewById(R.id.profile_name)
-
-        proPic = layout.findViewById(R.id.profile_picture)
-
-        proPic.setOnClickListener {
-            val intent = Intent(this.context, ProfilePictureActivity::class.java)
-            startActivity(intent)
-        }
 
 
         // getting user information
         db = FirebaseFirestore.getInstance()
-        user = FirebaseAuth.getInstance().currentUser!!
-        Log.d("USERNAME", user!!.uid)
-        if (user != null) {
-            user.let {
-                val docRef : DocumentReference = db.collection("users").document(user.uid)
-                docRef.addSnapshotListener {snapshot, e ->
-                    val username = snapshot!!.get("user_name").toString()
-                    /*val proPicSet : Boolean = snapshot!!.get("profile_picture") as Boolean
-                    user_title.text = username
-                    if (proPicSet) {
+        // user = FirebaseAuth.getInstance().currentUser!!
 
-                    }*/
-                }
-
-            }
+        val docRef : DocumentReference = db.collection("users").document(uid)
+        docRef.addSnapshotListener {snapshot, e ->
+            val username = snapshot!!.get("user_name").toString()
+            user_title.text = username
         }
+
+
 
         // populating and displaying the recycle view
         recView = layout.findViewById(R.id.recycle_images_viewer)
         val imagesNames : ArrayList<String> = ArrayList()
         val imagesDescr : ArrayList<String> = ArrayList()
         db.collection("images")
-            .whereEqualTo("user", user!!.uid)
+            .whereEqualTo("user", uid)
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {

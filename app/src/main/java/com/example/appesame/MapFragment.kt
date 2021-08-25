@@ -5,6 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.type.LatLng
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +40,22 @@ class MapFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false)
+        val layout = inflater.inflate(R.layout.fragment_map, container, false)
+        val supportMapFragment : SupportMapFragment = childFragmentManager!!.findFragmentById(R.id.google_map) as SupportMapFragment
+        supportMapFragment.getMapAsync(OnMapReadyCallback { map ->
+            map.setOnMapClickListener { loc ->
+                val markerOption : MarkerOptions = MarkerOptions()
+                markerOption.position(loc)
+                markerOption.title("UEIIIEIEIEIEI")
+                map.clear()
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    loc, 10F
+                ))
+                map.addMarker(markerOption)
+            }
+        })
+
+        return layout
     }
 
     companion object {
@@ -56,4 +77,5 @@ class MapFragment : Fragment() {
                 }
             }
     }
+
 }

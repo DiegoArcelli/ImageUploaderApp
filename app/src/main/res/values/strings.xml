@@ -17,4 +17,7 @@
     <string name="undo_upload_button">Undo</string>
     <string name="description_box_text">Insert description here</string>
     <string name="likes">Likes:</string>
+    <string name="undo_photo_button">Undo</string>
+    <string name="take_photo_button">Take</string>
+    <string name="new_profile_picture">Select new profile picture</string>
 </resources>

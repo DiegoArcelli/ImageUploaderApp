@@ -8,8 +8,7 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.appesame.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        android:label="fragment_search" />
     <fragment
         android:id="@+id/photoFragment"
         android:name="com.example.appesame.PhotoFragment"

@@ -30,13 +30,6 @@ class SearchFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var searchBox : EditText
-    private lateinit var searchButton : ImageButton
-    private lateinit var db : FirebaseFirestore
-    private lateinit var usersNames : ArrayList<String>
-    private lateinit var profileViewerAdpater: ProfileViewerAdapter
-    private lateinit var recView : RecyclerView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -51,39 +44,9 @@ class SearchFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val layout =  inflater.inflate(R.layout.fragment_search, container, false)
-        searchBox = layout.findViewById(R.id.search_user_box)
-        searchButton = layout.findViewById(R.id.search_user_button)
-        recView = layout.findViewById(R.id.profile_list_viewer)
-
-        searchButton.setOnClickListener {
-            val keyword : String = searchBox.text.toString()
-            if (keyword != "") {
-                db = FirebaseFirestore.getInstance()
-                usersNames = ArrayList()
-                db.collection("users").get().addOnSuccessListener { documents ->
-                    for (document in documents) {
-                        val user_name : String = document["user_name"] as String
-                        val mod_name = user_name.replace("\\s".toRegex(), "").lowercase()
-                        val mod_key = keyword.replace("\\s".toRegex(), "").lowercase()
-                        if (mod_name.indexOf(mod_key) != -1) {
-                            usersNames.add(user_name)
-                        }
-                    }
-                    Log.d("USERS", usersNames.toString())
-                }
-            } else {
-                Toast.makeText(this.context, "Insert something", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         return layout
     }
 
-    fun initializeImageViewer(imagesNames : ArrayList<String>, imagesDescr : ArrayList<String>) {
-        profileViewerAdpater = ProfileViewerAdapter(imagesNames, imagesDescr, this.context)
-        recView.adapter = profileViewerAdpater
-        recView.layoutManager = LinearLayoutManager(this.context)
-    }
 
     companion object {
         /**

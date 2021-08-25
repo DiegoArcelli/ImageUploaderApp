@@ -62,8 +62,8 @@ class LoginFragment : Fragment() {
         fAuth = FirebaseAuth.getInstance()
 
         toRegistration.setOnClickListener {
-            Log.d("GO TO REG", "Go to registration page")
             findNavController().navigate(R.id.action_login_to_registration)
+            Log.d("GO TO REG", "Go to registration page")
         }
 
         loginButton.setOnClickListener {

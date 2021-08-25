@@ -5,7 +5,21 @@
       <map>
         <entry key="app/src/main/res/drawable/ic_like.xml" value="0.2015625" />
         <entry key="app/src/main/res/drawable/ic_undo_like.xml" value="0.2015625" />
-        <entry key="app/src/main/res/layout/images_viewer.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_app.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_camera.xml" value="0.16979166666666667" />
+        <entry key="app/src/main/res/layout/activity_form.xml" value="0.18541666666666667" />
+        <entry key="app/src/main/res/layout/activity_image_uploader.xml" value="0.15489130434782608" />
+        <entry key="app/src/main/res/layout/activity_profile_picture.xml" value="0.15489130434782608" />
+        <entry key="app/src/main/res/layout/activity_upload_profile_picture.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_map.xml" value="0.18541666666666667" />
+        <entry key="app/src/main/res/layout/fragment_other_profile.xml" value="0.18541666666666667" />
+        <entry key="app/src/main/res/layout/fragment_photo.xml" value="0.15489130434782608" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_search_bar.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_search_bar_anza.xml" value="0.17074275362318841" />
+        <entry key="app/src/main/res/layout/images_viewer.xml" value="0.4086294416243655" />
+        <entry key="app/src/main/res/layout/users_viewer.xml" value="0.33" />
       </map>
     </option>
   </component>

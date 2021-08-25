@@ -1,6 +1,7 @@
 package com.example.appesame
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.media.ExifInterface
 import android.net.Uri
@@ -14,6 +15,7 @@ import androidx.core.net.toFile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
@@ -30,7 +32,7 @@ class ImageUploaderActivity : AppCompatActivity() {
     private lateinit var storageRef : StorageReference
     private lateinit var db : FirebaseFirestore
     private lateinit var user : FirebaseUser
-    
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,11 @@ class ImageUploaderActivity : AppCompatActivity() {
         val bundle : Bundle = intent.extras!!
         preview = findViewById<ImageView>(R.id.image_preview)
         val uri = Uri.parse(bundle.getString("uri"))
+        val latitude = bundle.getDouble("latitute")
+        val longitude = bundle.getDouble("longitude")
+        val location = GeoPoint(latitude, longitude)
+
+        Log.d("URIONE", uri.toString())
         preview.setImageURI(uri)
 
         user = FirebaseAuth.getInstance().currentUser!!
@@ -49,6 +56,7 @@ class ImageUploaderActivity : AppCompatActivity() {
         uploadButton.setOnClickListener{
             Log.d("URI", uri.path!!.toString())
             Log.d("USER", user!!.uid)
+            Toast.makeText(this, "DIOCARO $latitude, $longitude", Toast.LENGTH_LONG).show()
 
             // store the image in the database
             db = FirebaseFirestore.getInstance()
@@ -64,6 +72,7 @@ class ImageUploaderActivity : AppCompatActivity() {
                 imgInfo.put("description", description.text.toString())
                 imgInfo.put("user", user.uid.toString())
                 imgInfo.put("date", Timestamp(System.currentTimeMillis()))
+                imgInfo.put("location", location)
                 dbRef.set(imgInfo)
                 Toast.makeText(this, "Image uploaded", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, AppActivity::class.java))

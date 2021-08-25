@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search_navigation"
+    app:startDestination="@id/searchBarFragment">
+    <fragment
+        android:id="@+id/searchBarFragment"
+        android:name="com.example.appesame.SearchBarFragment"
+        android:label="fragment_search_bar"
+        tools:layout="@layout/fragment_search_bar" >
+        <action
+            android:id="@+id/action_searchBarFragment_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.example.appesame.OtherProfileFragment"
+        android:label="fragment_other_profile3"
+        tools:layout="@layout/fragment_other_profile3" >
+        <argument
+            android:name="uid"
+            app:argType="string" />
+    </fragment>
+</navigation>

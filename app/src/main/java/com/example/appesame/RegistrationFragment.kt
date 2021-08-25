@@ -68,9 +68,10 @@ class RegistrationFragment : Fragment() {
         fAuth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        if (fAuth.currentUser != null) {
+        Log.d("CURRENT USER", fAuth.currentUser.toString())
+        /* if (fAuth.currentUser != null) {
             findNavController().navigate(R.id.action_registration_to_login)
-        }
+        } */
 
         toLogin.setOnClickListener {
             findNavController().navigate(R.id.action_registration_to_login)
@@ -126,7 +127,7 @@ class RegistrationFragment : Fragment() {
                     val docRef : DocumentReference = db.collection("users").document(user.uid)
                     val userMap : HashMap<String, Any?> = HashMap<String, Any?>()
                     userMap.put("user_name", username_text)
-                    userMap.put("profile_picture", null)
+                    userMap.put("profile_picture", false)
                     docRef.set(userMap).addOnSuccessListener {
                         Toast.makeText(activity, "User created", Toast.LENGTH_SHORT).show()
                         findNavController().navigate(R.id.action_registration_to_login)
