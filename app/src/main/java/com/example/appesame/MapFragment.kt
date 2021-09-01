@@ -1,16 +1,20 @@
 package com.example.appesame
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.type.LatLng
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.storage.FirebaseStorage
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +30,27 @@ class MapFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var db : FirebaseFirestore
+    private lateinit var store : FirebaseStorage
+    private lateinit var images : HashMap<String?, Uri?>
+
+    fun setImagesUri() {
+        db = FirebaseFirestore.getInstance()
+        db.collection("images")
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    FirebaseStorage.getInstance().reference.child("/images/${document["file_name"] as String}").downloadUrl.addOnCompleteListener { task->
+                        if (task.isSuccessful) {
+                            val fileName = document["file_name"] as String
+                            images.put(fileName.split(".")[0], task.result)
+                        } else {
+                            Log.d("ERROR", "Error")
+                        }
+                    }
+                }
+            }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +66,67 @@ class MapFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val layout = inflater.inflate(R.layout.fragment_map, container, false)
+        images = HashMap<String?, Uri?>()
+        setImagesUri()
+
         val supportMapFragment : SupportMapFragment = childFragmentManager!!.findFragmentById(R.id.google_map) as SupportMapFragment
+
         supportMapFragment.getMapAsync(OnMapReadyCallback { map ->
+
+            map.setInfoWindowAdapter(ImageInfoWindowAdapter(this.requireContext(), images))
+
+            map.setOnMarkerClickListener { marker ->
+                if (marker.isInfoWindowShown) {
+                    marker.hideInfoWindow()
+                } else {
+                    marker.showInfoWindow()
+                }
+                true
+            }
+
+
+
+            db.collection("images")
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+
+                        val loc = document["location"] as GeoPoint
+                        val descr = document["description"] as String
+                        val id = document.id
+
+                        val option = MarkerOptions()
+                        option.position(com.google.android.gms.maps.model.LatLng(loc.latitude, loc.longitude))
+                        option.title(id)
+                        option.snippet(descr)
+                        map.addMarker(option)
+
+
+                        /*val loc = document["location"] as GeoPoint
+                        val userId = document["user"] as String
+                        //val userName = db.collection("users").document(userId).get()
+                        val imgName = document["file_name"] as String
+                        store = FirebaseStorage.getInstance()
+                        Log.d("IMAGE", "images/${imgName}")
+                        store.reference.child("/images/$imgName").downloadUrl.addOnSuccessListener { uri ->
+
+                            val descr = document["description"] as String
+                            val option = MarkerOptions()
+
+                            option.title("Diego Arcelli")
+                            option.position(com.google.android.gms.maps.model.LatLng(loc.latitude, loc.longitude))
+                            option.snippet(descr)
+                            map.addMarker(option)
+                        }*/
+
+
+                    }
+                }
+
+
+        })
+
+        /*supportMapFragment.getMapAsync(OnMapReadyCallback { map ->
             map.setOnMapClickListener { loc ->
                 val markerOption : MarkerOptions = MarkerOptions()
                 markerOption.position(loc)
@@ -53,7 +137,7 @@ class MapFragment : Fragment() {
                 ))
                 map.addMarker(markerOption)
             }
-        })
+        })*/
 
         return layout
     }

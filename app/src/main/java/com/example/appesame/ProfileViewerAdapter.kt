@@ -17,10 +17,14 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class ProfileViewerAdapter(
     private var usersNames : ArrayList<String>,
-    private var imagesNames : ArrayList<String>,
+    private var imagesSet : ArrayList<Boolean>,
     private var userIDs : ArrayList<String>,
     private var context : Context?,
     private var navController: NavController
@@ -50,15 +54,30 @@ class ProfileViewerAdapter(
 
     override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
         holder.userNameText.text = usersNames[position]
+        var id : String = userIDs[position]
+
         holder.userNameText.setOnClickListener {
-            var id : String = userIDs[position]
             val action = SearchBarFragmentDirections.actionSearchBarFragmentToOtherProfileFragment(id)
             navController.navigate(action)
+        }
+
+        val picSet = imagesSet[position]
+        if (picSet) {
+            val storageRef : StorageReference = FirebaseStorage.getInstance().reference
+            val imageRef = storageRef.child("profile_pics/${id}.jpg")
+            imageRef.downloadUrl.addOnSuccessListener { uri ->
+                Glide.with(context!!)
+                    .asBitmap()
+                    .load(uri)
+                    .into(holder.userProfilePic)
+            }
+        } else {
+            holder.userProfilePic.setImageResource(R.drawable.generic_pro_pic)
         }
     }
 
     override fun getItemCount(): Int {
-        return 2
+        return userIDs.size
     }
 
 }

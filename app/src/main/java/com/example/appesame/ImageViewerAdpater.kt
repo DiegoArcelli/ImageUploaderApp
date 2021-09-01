@@ -1,5 +1,6 @@
 package com.example.appesame
 
+import android.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,10 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.collection.LLRBNode
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import android.os.Build
+import androidx.fragment.app.FragmentTransaction
+import com.squareup.picasso.Picasso
+
 
 public class ImageViewerAdpater(
     private var imagesNames : ArrayList<String>,
@@ -62,8 +67,7 @@ public class ImageViewerAdpater(
         val imageRef = storageRef.child("images/${imgName}")
         imageRef.downloadUrl.addOnSuccessListener { uri ->
             Log.d("URI", uri.toString())
-            Glide.with(context!!)
-                .asBitmap()
+            Picasso.with(context!!)
                 .load(uri)
                 .into(holder.image)
         }
@@ -71,6 +75,33 @@ public class ImageViewerAdpater(
         holder.description.text = imagesDescr[position]
 
         updateProfile(holder, position)
+
+        holder.image.setOnClickListener {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Image elimination")
+            builder.setMessage("Do you want to delete this image?")
+
+            builder.setPositiveButton("Yes") { dialog, which ->
+                val imgId = imgName.split(".")[0]
+                Log.d("FICA", "/images/${imgId}")
+                imageRef.delete().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        FirebaseFirestore.getInstance().collection("images").document(imgId).delete().addOnSuccessListener {
+                            Toast.makeText(context, "Image deleted", Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        Toast.makeText(context, "Error", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+            }
+
+            builder.setNegativeButton("No") { dialog, which ->
+                Log.d("DELETE", "Elimination aborted")
+            }
+
+            builder.show()
+        }
 
         holder.likeButton.setOnClickListener {
             val db : FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -135,12 +166,12 @@ public class ImageViewerAdpater(
             .get()
             .addOnSuccessListener { documents ->
                 likes_count = documents.size()
-                holder.likesCount.text = "Likes: " + likes_count.toString()
+                holder.likesCount.text = "Likes: ${likes_count.toString()}"
             }
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return imagesNames.size
     }
 
 }

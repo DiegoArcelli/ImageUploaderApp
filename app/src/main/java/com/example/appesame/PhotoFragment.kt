@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -124,6 +125,8 @@ class PhotoFragment : Fragment() {
         this.locationProvider = LocationServices.getFusedLocationProviderClient(this.activity)
 
         galleryButton = layout.findViewById(R.id.select_from_gallery_button)
+        galleryButton.setColorFilter(Color.argb(255, 160, 110, 190))
+        galleryButton.setBackgroundColor(Color.argb(255, 105, 0, 190))
         galleryButton.setOnClickListener{
             pickerContent.launch("image/*")
         }
@@ -164,6 +167,8 @@ class PhotoFragment : Fragment() {
         })
 
         photoButton = layout.findViewById(R.id.take_photo_button)
+        photoButton.setColorFilter(Color.argb(255, 160, 110, 190))
+        photoButton.setBackgroundColor(Color.argb(255, 105, 0, 190))
         photoButton.setOnClickListener {
             Log.d("PREMUTO", "Pigiato")
             val intent : Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AppEsame</string>
+    <string name="app_name">ImageUpload</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login_title">Log In</string>
@@ -20,4 +20,17 @@
     <string name="undo_photo_button">Undo</string>
     <string name="take_photo_button">Take</string>
     <string name="new_profile_picture">Select new profile picture</string>
+    <string name="change_user_name">Insert new username:</string>
+    <string name="change_user_name_button">Change name</string>
+    <string name="change_pwd">Select new password:</string>
+    <string name="insert_new_pwd">Insert new password:</string>
+    <string name="confirm_new_pwd">Confirm new password:</string>
+    <string name="change_pwd_button">Change password</string>
+    <string name="pwd_forgot_text">Have you forgot your password?</string>
+    <string name="pwd_forgot_button">Recover password</string>
+    <string name="delete_account_text">Click the button to delete your account</string>
+    <string name="delete_account_button">Delete account</string>
+    <string name="confirmed_delete_account_button">Delete</string>
+    <string name="next_button">Next</string>
+    <string name="prev_button">Prev</string>
 </resources>

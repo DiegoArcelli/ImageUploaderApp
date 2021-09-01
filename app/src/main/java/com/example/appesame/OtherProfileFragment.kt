@@ -6,13 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,6 +37,7 @@ class OtherProfileFragment : Fragment() {
     private lateinit var db : FirebaseFirestore
     private lateinit var user : FirebaseUser
     private lateinit var imgViewAdapter : ImageViewerAdpater
+    private lateinit var proPic : ImageView
     private lateinit var recView : RecyclerView
     private val args : OtherProfileFragmentArgs by navArgs()
 
@@ -54,7 +59,8 @@ class OtherProfileFragment : Fragment() {
         val layout =  inflater.inflate(R.layout.fragment_other_profile, container, false)
         val uid = args.uid
 
-        user_title = layout.findViewById(R.id.profile_name)
+        user_title = layout.findViewById(R.id.other_profile_name)
+        proPic = layout.findViewById(R.id.other_profile_picture)
 
 
         // getting user information
@@ -64,13 +70,27 @@ class OtherProfileFragment : Fragment() {
         val docRef : DocumentReference = db.collection("users").document(uid)
         docRef.addSnapshotListener {snapshot, e ->
             val username = snapshot!!.get("user_name").toString()
+            val proPicSet : Boolean = snapshot!!.get("profile_picture") as Boolean
             user_title.text = username
+            if (proPicSet) {
+                val storageRef : StorageReference = FirebaseStorage.getInstance().reference
+                val imageRef = storageRef.child("profile_pics/${user.uid}.jpg")
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    Log.d("URI", uri.toString())
+                    Glide.with(this.requireContext())
+                        .asBitmap()
+                        .load(uri)
+                        .into(proPic)
+                }
+            } else {
+                proPic.setImageResource(R.drawable.generic_pro_pic)
+            }
         }
 
 
 
         // populating and displaying the recycle view
-        recView = layout.findViewById(R.id.recycle_images_viewer)
+        recView = layout.findViewById(R.id.other_recycle_images_viewer)
         val imagesNames : ArrayList<String> = ArrayList()
         val imagesDescr : ArrayList<String> = ArrayList()
         db.collection("images")

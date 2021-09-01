@@ -23,7 +23,7 @@ private lateinit var searchButton : ImageButton
 private lateinit var usersIDs : ArrayList<String>
 private lateinit var db : FirebaseFirestore
 private lateinit var usersNames : ArrayList<String>
-private lateinit var usersPics : ArrayList<String>
+private lateinit var usersPics : ArrayList<Boolean>
 private lateinit var profileViewerAdpater: ProfileViewerAdapter
 private lateinit var recView : RecyclerView
 
@@ -68,13 +68,15 @@ class SearchBarFragment : Fragment() {
                 db.collection("users").get().addOnSuccessListener { documents ->
                     for (document in documents) {
                         val user_name : String = document["user_name"] as String
+                        val picSet : Boolean = document["profile_picture"] as Boolean
                         val user_id : String = document.id
                         Log.d("USER", "$user_name: $user_id")
                         val mod_name = user_name.replace("\\s".toRegex(), "").lowercase()
                         val mod_key = keyword.replace("\\s".toRegex(), "").lowercase()
+
                         if (mod_name.indexOf(mod_key) != -1) {
                             usersNames.add(user_name)
-                            usersPics.add("")
+                            usersPics.add(picSet)
                             usersIDs.add(user_id)
                         }
                     }
@@ -88,7 +90,7 @@ class SearchBarFragment : Fragment() {
         return layout
     }
 
-    fun initializeImageViewer(usersNames : ArrayList<String>, usersPics : ArrayList<String>, usersIDs: ArrayList<String>) {
+    fun initializeImageViewer(usersNames : ArrayList<String>, usersPics : ArrayList<Boolean>, usersIDs: ArrayList<String>) {
         profileViewerAdpater = ProfileViewerAdapter(usersNames, usersPics, usersIDs, this.requireContext(), this.findNavController())
         recView.adapter = profileViewerAdpater
         recView.layoutManager = LinearLayoutManager(this.context)
